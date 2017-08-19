@@ -208,14 +208,14 @@ var containerMarker = document.querySelector('.tokyo__pin-map');
 var renderMarker = function (arrayUsers, contentMarker) {
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < arrayUsers.length; i++) {
+  arrayUsers.forEach(function (element) {
     var newMarker = document.createElement('div');
     newMarker.classList.add('pin');
-    newMarker.style = 'left: ' + arrayUsers[i].location.x + 'px;' + ' top:' + arrayUsers[i].location.y + 'px;';
-    newMarker.innerHTML = '<img src=' + arrayUsers[i].author.avatar + ' class=\'rounded\' width=\'40\' height=\'40\'>';
+    newMarker.style = 'left: ' + element.location.x + 'px;' + ' top:' + element.location.y + 'px;';
+    newMarker.innerHTML = '<img src=' + element.author.avatar + ' class=\'rounded\' width=\'40\' height=\'40\'>';
 
     fragment.appendChild(newMarker);
-  }
+  });
 
   contentMarker.appendChild(fragment);
 };
@@ -231,9 +231,15 @@ var insertContentTemplate = function (arrayСompetitor, contentTag) {
   var createTypePlace = function (typePlace) {
     var result = '';
     switch (typePlace) {
-      case 'house': result = 'Дом'; break;
-      case 'flat': result = 'Квартира'; break;
-      case 'bungalo': result = 'Бунгало'; break;
+      case 'house':
+        result = 'Дом';
+        break;
+      case 'flat':
+        result = 'Квартира';
+        break;
+      case 'bungalo':
+        result = 'Бунгало';
+        break;
     }
 
     return result;
@@ -250,31 +256,30 @@ var insertContentTemplate = function (arrayСompetitor, contentTag) {
   var renderBoon = function (arrayBoon, boonContent) {
     var fragmentBoon = document.createDocumentFragment();
 
-    for (var i = 0; i < arrayBoon.length; i++) {
+    arrayBoon.forEach(function (element) {
       var spanBoon = document.createElement('span');
       spanBoon.classList.add('feature__image');
-      spanBoon.classList.add('feature__image--' + arrayBoon[i]);
+      spanBoon.classList.add('feature__image--' + element);
       fragmentBoon.appendChild(spanBoon);
-    }
+    });
 
     boonContent.appendChild(fragmentBoon);
   };
 
-
-  for (var i = 0; i < arrayСompetitor.length; i++) {
+  arrayСompetitor.forEach(function (element) {
     var rivalTemplate = containerTemplate.cloneNode(true);
     var boonContainer = rivalTemplate.querySelector('.lodge__features');
-    rivalTemplate.querySelector('.lodge__title').textContent = arrayСompetitor[i].offer.title;
-    rivalTemplate.querySelector('.lodge__address').textContent = arrayСompetitor[i].location.x + ' ' + arrayСompetitor[i].location.y;
-    rivalTemplate.querySelector('.lodge__price').innerHTML = arrayСompetitor[i].offer.price + ' &#x20bd;/ночь';
-    rivalTemplate.querySelector('.lodge__type').textContent = createTypePlace(arrayСompetitor[i].offer.type);
-    rivalTemplate.querySelector('.lodge__rooms-and-guests').textContent = pasteGuestsRooms(arrayСompetitor[i].offer.guests, arrayСompetitor[i].offer.rooms);
-    rivalTemplate.querySelector('.lodge__checkin-time').textContent = pasteCheckinCheckout(arrayСompetitor[i].offer.checkin, arrayСompetitor[i].offer.checkout);
-    renderBoon(arrayСompetitor[i].offer.features, boonContainer);
-    rivalTemplate.querySelector('.lodge__description').textContent = arrayСompetitor[i].offer.price.description;
+    rivalTemplate.querySelector('.lodge__title').textContent = element.offer.title;
+    rivalTemplate.querySelector('.lodge__address').textContent = element.location.x + ' ' + element.location.y;
+    rivalTemplate.querySelector('.lodge__price').innerHTML = element.offer.price + ' &#x20bd;/ночь';
+    rivalTemplate.querySelector('.lodge__type').textContent = createTypePlace(element.offer.type);
+    rivalTemplate.querySelector('.lodge__rooms-and-guests').textContent = pasteGuestsRooms(element.offer.guests, element.offer.rooms);
+    rivalTemplate.querySelector('.lodge__checkin-time').textContent = pasteCheckinCheckout(element.offer.checkin, element.offer.checkout);
+    renderBoon(element.offer.features, boonContainer);
+    rivalTemplate.querySelector('.lodge__description').textContent = element.offer.price.description;
 
     containerRivalInfo.appendChild(rivalTemplate);
-  }
+  });
 };
 
 insertContentTemplate(arrayRival, '.dialog__panel');
