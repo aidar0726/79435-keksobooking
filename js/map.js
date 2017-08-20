@@ -222,49 +222,49 @@ var renderMarker = function (arrayUsers, contentMarker) {
 
 renderMarker(arrayRival, containerMarker);
 
+var createTypePlace = function (typePlace) {
+  var result = '';
+  switch (typePlace) {
+    case 'house':
+      result = 'Дом';
+      break;
+    case 'flat':
+      result = 'Квартира';
+      break;
+    case 'bungalo':
+      result = 'Бунгало';
+      break;
+  }
+
+  return result;
+};
+
+var pasteGuestsRooms = function (guests, rooms) {
+  return 'Для ' + guests + ' гостей в ' + rooms + ' комнатах';
+};
+
+var pasteCheckinCheckout = function (enter, exit) {
+  return 'Заезд после ' + enter + ', выезд до ' + exit;
+};
+
+var renderBoon = function (arrayBoon, boonContent) {
+  var fragmentBoon = document.createDocumentFragment();
+
+  arrayBoon.forEach(function (element) {
+    var spanBoon = document.createElement('span');
+    spanBoon.classList.add('feature__image');
+    spanBoon.classList.add('feature__image--' + element);
+    fragmentBoon.appendChild(spanBoon);
+  });
+
+  boonContent.appendChild(fragmentBoon);
+};
+
 // функция для отрисовки содержимого в шаблон конкурентов
 
 var insertContentTemplate = function (arrayСompetitor, contentTag) {
   var containerTemplate = document.querySelector('#lodge-template').content;
   var containerRivalInfo = document.querySelector(contentTag);
-
-  var createTypePlace = function (typePlace) {
-    var result = '';
-    switch (typePlace) {
-      case 'house':
-        result = 'Дом';
-        break;
-      case 'flat':
-        result = 'Квартира';
-        break;
-      case 'bungalo':
-        result = 'Бунгало';
-        break;
-    }
-
-    return result;
-  };
-
-  var pasteGuestsRooms = function (guests, rooms) {
-    return 'Для ' + guests + ' гостей в ' + rooms + ' комнатах';
-  };
-
-  var pasteCheckinCheckout = function (enter, exit) {
-    return 'Заезд после ' + enter + ', выезд до ' + exit;
-  };
-
-  var renderBoon = function (arrayBoon, boonContent) {
-    var fragmentBoon = document.createDocumentFragment();
-
-    arrayBoon.forEach(function (element) {
-      var spanBoon = document.createElement('span');
-      spanBoon.classList.add('feature__image');
-      spanBoon.classList.add('feature__image--' + element);
-      fragmentBoon.appendChild(spanBoon);
-    });
-
-    boonContent.appendChild(fragmentBoon);
-  };
 
   arrayСompetitor.forEach(function (element) {
     var rivalTemplate = containerTemplate.cloneNode(true);
