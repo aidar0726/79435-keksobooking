@@ -47,7 +47,7 @@ var arrayRival = [
     },
 
     'location': {
-      'x': 600,
+      'x': 400,
       'y': 300,
     }
   },
@@ -97,7 +97,7 @@ var arrayRival = [
     },
 
     'location': {
-      'x': 200,
+      'x': 300,
       'y': 500,
     }
   },
@@ -172,7 +172,7 @@ var arrayRival = [
     },
 
     'location': {
-      'x': 100,
+      'x': 400,
       'y': 100,
     }
   },
@@ -197,7 +197,7 @@ var arrayRival = [
     },
 
     'location': {
-      'x': 200,
+      'x': 300,
       'y': 200,
     }
   }
@@ -260,26 +260,26 @@ var renderBoon = function (arrayBoon, boonContent) {
   boonContent.appendChild(fragmentBoon);
 };
 
-// функция для отрисовки содержимого в шаблон конкурентов
-
 var insertContentTemplate = function (arrayСompetitor, contentTag) {
   var containerTemplate = document.querySelector('#lodge-template').content;
   var containerRivalInfo = document.querySelector(contentTag);
+  document.querySelector('.dialog__panel').remove();
+  var avatar = containerRivalInfo.querySelector('img');
 
-  arrayСompetitor.forEach(function (element) {
-    var rivalTemplate = containerTemplate.cloneNode(true);
-    var boonContainer = rivalTemplate.querySelector('.lodge__features');
-    rivalTemplate.querySelector('.lodge__title').textContent = element.offer.title;
-    rivalTemplate.querySelector('.lodge__address').textContent = element.location.x + ' ' + element.location.y;
-    rivalTemplate.querySelector('.lodge__price').innerHTML = element.offer.price + ' &#x20bd;/ночь';
-    rivalTemplate.querySelector('.lodge__type').textContent = createTypePlace(element.offer.type);
-    rivalTemplate.querySelector('.lodge__rooms-and-guests').textContent = pasteGuestsRooms(element.offer.guests, element.offer.rooms);
-    rivalTemplate.querySelector('.lodge__checkin-time').textContent = pasteCheckinCheckout(element.offer.checkin, element.offer.checkout);
-    renderBoon(element.offer.features, boonContainer);
-    rivalTemplate.querySelector('.lodge__description').textContent = element.offer.price.description;
+  var element = arrayСompetitor[0];
+  var rivalTemplate = containerTemplate.cloneNode(true);
+  var boonContainer = rivalTemplate.querySelector('.lodge__features');
+  rivalTemplate.querySelector('.lodge__title').textContent = element.offer.title;
+  rivalTemplate.querySelector('.lodge__address').textContent = element.location.x + ' ' + element.location.y;
+  rivalTemplate.querySelector('.lodge__price').innerHTML = element.offer.price + ' &#x20bd;/ночь';
+  rivalTemplate.querySelector('.lodge__type').textContent = createTypePlace(element.offer.type);
+  rivalTemplate.querySelector('.lodge__rooms-and-guests').textContent = pasteGuestsRooms(element.offer.guests, element.offer.rooms);
+  rivalTemplate.querySelector('.lodge__checkin-time').textContent = pasteCheckinCheckout(element.offer.checkin, element.offer.checkout);
+  renderBoon(element.offer.features, boonContainer);
+  rivalTemplate.querySelector('.lodge__description').textContent = element.offer.price.description;
+  avatar.src = element.author.avatar;
 
-    containerRivalInfo.appendChild(rivalTemplate);
-  });
+  containerRivalInfo.appendChild(rivalTemplate);
 };
 
-insertContentTemplate(arrayRival, '.dialog__panel');
+insertContentTemplate(arrayRival, '.dialog');
