@@ -1,4 +1,6 @@
 'use strict';
+var ESC_CODE = 27;
+var ENTER_CODE = 13;
 
 // массив конкурентов
 var arrayRival = [
@@ -204,23 +206,7 @@ var arrayRival = [
 ];
 
 var containerMarker = document.querySelector('.tokyo__pin-map');
-// функция для отрисовки маркеров
-var renderMarker = function (arrayUsers, contentMarker) {
-  var fragment = document.createDocumentFragment();
-
-  arrayUsers.forEach(function (element) {
-    var newMarker = document.createElement('div');
-    newMarker.classList.add('pin');
-    newMarker.style = 'left: ' + element.location.x + 'px;' + ' top:' + element.location.y + 'px;';
-    newMarker.innerHTML = '<img src=' + element.author.avatar + ' class=\'rounded\' width=\'40\' height=\'40\'>';
-
-    fragment.appendChild(newMarker);
-  });
-
-  contentMarker.appendChild(fragment);
-};
-
-renderMarker(arrayRival, containerMarker);
+var containerRivalInfo = document.querySelector('.dialog');
 
 var createTypePlace = function (typePlace) {
   var result = '';
@@ -260,13 +246,12 @@ var renderBoon = function (arrayBoon, boonContent) {
   boonContent.appendChild(fragmentBoon);
 };
 
-var insertContentTemplate = function (arrayСompetitor, contentTag) {
+var insertContentTemplate = function (arrayСompetitor, сurrentRival) {
   var containerTemplate = document.querySelector('#lodge-template').content;
-  var containerRivalInfo = document.querySelector(contentTag);
   document.querySelector('.dialog__panel').remove();
   var avatar = containerRivalInfo.querySelector('img');
 
-  var element = arrayСompetitor[0];
+  var element = arrayСompetitor[сurrentRival];
   var rivalTemplate = containerTemplate.cloneNode(true);
   var boonContainer = rivalTemplate.querySelector('.lodge__features');
   rivalTemplate.querySelector('.lodge__title').textContent = element.offer.title;
@@ -282,4 +267,79 @@ var insertContentTemplate = function (arrayСompetitor, contentTag) {
   containerRivalInfo.appendChild(rivalTemplate);
 };
 
-insertContentTemplate(arrayRival, '.dialog');
+// insertContentTemplate(arrayRival, 5);
+
+// функция для навешивания событии(клики,нажатие клавиш)  маркерам
+var handleMarkerEvent = function (markerTag, indexCurrentRival) {
+  markerTag.addEventListener('click', function () {
+    insertContentTemplate(arrayRival, indexCurrentRival);
+    addClassActive(markers, event);
+    containerRivalInfo.style.display = 'block';
+  });
+
+  markerTag.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_CODE) {
+      containerRivalInfo.style.display = 'block';
+    }
+  });
+};
+
+// функция для удаления активного класса
+var removeClassActive = function (markerArray) {
+  for (var i = 0; i < markerArray.length; i++) {
+    if (markerArray[i].classList.contains('pin--active')) {
+      markerArray[i].classList.remove('pin--active');
+    }
+  }
+};
+
+
+// функция для добавления активного класса маркеру
+var addClassActive = function (AllMarkers, currentMarker) {
+  removeClassActive(AllMarkers);
+  currentMarker.currentTarget.classList.add('pin--active');
+};
+
+// функция для отрисовки маркеров
+var renderMarker = function (arrayUsers, contentMarker) {
+  var fragment = document.createDocumentFragment();
+
+  arrayUsers.forEach(function (element, index) {
+    var newMarker = document.createElement('div');
+    newMarker.classList.add('pin');
+    newMarker.style = 'left: ' + element.location.x + 'px;' + ' top:' + element.location.y + 'px;';
+    newMarker.innerHTML = '<img src=' + element.author.avatar + ' class=\'rounded\' width=\'40\' height=\'40\'>';
+    newMarker.setAttribute('tabindex', 0);
+    handleMarkerEvent(newMarker, index);
+
+    fragment.appendChild(newMarker);
+  });
+
+  contentMarker.appendChild(fragment);
+};
+
+renderMarker(arrayRival, containerMarker);
+
+var markers = document.querySelectorAll('.pin');
+var dialogClose = document.querySelector('.dialog__close');
+dialogClose.setAttribute('tabindex', 0);
+
+dialogClose.addEventListener('click', function () {
+  containerRivalInfo.style.display = 'none';
+  removeClassActive(markers);
+});
+
+dialogClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_CODE) {
+    containerRivalInfo.style.display = 'none';
+  }
+});
+
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    containerRivalInfo.style.display = 'none';
+    removeClassActive(markers);
+  }
+});
+
+
