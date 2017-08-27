@@ -267,7 +267,6 @@ var insertContentTemplate = function (arrayСompetitor, сurrentRival) {
   containerRivalInfo.appendChild(rivalTemplate);
 };
 
-// insertContentTemplate(arrayRival, 5);
 
 // функция для навешивания событии(клики,нажатие клавиш)  маркерам
 var handleMarkerEvent = function (markerTag, indexCurrentRival) {
