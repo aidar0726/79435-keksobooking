@@ -1,4 +1,6 @@
 'use strict';
+var ESC_CODE = 27;
+var ENTER_CODE = 13;
 
 // массив конкурентов
 var arrayRival = [
@@ -47,7 +49,7 @@ var arrayRival = [
     },
 
     'location': {
-      'x': 600,
+      'x': 400,
       'y': 300,
     }
   },
@@ -97,7 +99,7 @@ var arrayRival = [
     },
 
     'location': {
-      'x': 200,
+      'x': 300,
       'y': 500,
     }
   },
@@ -172,7 +174,7 @@ var arrayRival = [
     },
 
     'location': {
-      'x': 100,
+      'x': 400,
       'y': 100,
     }
   },
@@ -197,30 +199,14 @@ var arrayRival = [
     },
 
     'location': {
-      'x': 200,
+      'x': 300,
       'y': 200,
     }
   }
 ];
 
 var containerMarker = document.querySelector('.tokyo__pin-map');
-// функция для отрисовки маркеров
-var renderMarker = function (arrayUsers, contentMarker) {
-  var fragment = document.createDocumentFragment();
-
-  arrayUsers.forEach(function (element) {
-    var newMarker = document.createElement('div');
-    newMarker.classList.add('pin');
-    newMarker.style = 'left: ' + element.location.x + 'px;' + ' top:' + element.location.y + 'px;';
-    newMarker.innerHTML = '<img src=' + element.author.avatar + ' class=\'rounded\' width=\'40\' height=\'40\'>';
-
-    fragment.appendChild(newMarker);
-  });
-
-  contentMarker.appendChild(fragment);
-};
-
-renderMarker(arrayRival, containerMarker);
+var containerRivalInfo = document.querySelector('.dialog');
 
 var createTypePlace = function (typePlace) {
   var result = '';
@@ -260,26 +246,99 @@ var renderBoon = function (arrayBoon, boonContent) {
   boonContent.appendChild(fragmentBoon);
 };
 
-// функция для отрисовки содержимого в шаблон конкурентов
-
-var insertContentTemplate = function (arrayСompetitor, contentTag) {
+var insertContentTemplate = function (arrayСompetitor, сurrentRival) {
   var containerTemplate = document.querySelector('#lodge-template').content;
-  var containerRivalInfo = document.querySelector(contentTag);
+  document.querySelector('.dialog__panel').remove();
+  var avatar = containerRivalInfo.querySelector('img');
 
-  arrayСompetitor.forEach(function (element) {
-    var rivalTemplate = containerTemplate.cloneNode(true);
-    var boonContainer = rivalTemplate.querySelector('.lodge__features');
-    rivalTemplate.querySelector('.lodge__title').textContent = element.offer.title;
-    rivalTemplate.querySelector('.lodge__address').textContent = element.location.x + ' ' + element.location.y;
-    rivalTemplate.querySelector('.lodge__price').innerHTML = element.offer.price + ' &#x20bd;/ночь';
-    rivalTemplate.querySelector('.lodge__type').textContent = createTypePlace(element.offer.type);
-    rivalTemplate.querySelector('.lodge__rooms-and-guests').textContent = pasteGuestsRooms(element.offer.guests, element.offer.rooms);
-    rivalTemplate.querySelector('.lodge__checkin-time').textContent = pasteCheckinCheckout(element.offer.checkin, element.offer.checkout);
-    renderBoon(element.offer.features, boonContainer);
-    rivalTemplate.querySelector('.lodge__description').textContent = element.offer.price.description;
+  var element = arrayСompetitor[сurrentRival];
+  var rivalTemplate = containerTemplate.cloneNode(true);
+  var boonContainer = rivalTemplate.querySelector('.lodge__features');
+  rivalTemplate.querySelector('.lodge__title').textContent = element.offer.title;
+  rivalTemplate.querySelector('.lodge__address').textContent = element.location.x + ' ' + element.location.y;
+  rivalTemplate.querySelector('.lodge__price').innerHTML = element.offer.price + ' &#x20bd;/ночь';
+  rivalTemplate.querySelector('.lodge__type').textContent = createTypePlace(element.offer.type);
+  rivalTemplate.querySelector('.lodge__rooms-and-guests').textContent = pasteGuestsRooms(element.offer.guests, element.offer.rooms);
+  rivalTemplate.querySelector('.lodge__checkin-time').textContent = pasteCheckinCheckout(element.offer.checkin, element.offer.checkout);
+  renderBoon(element.offer.features, boonContainer);
+  rivalTemplate.querySelector('.lodge__description').textContent = element.offer.price.description;
+  avatar.src = element.author.avatar;
 
-    containerRivalInfo.appendChild(rivalTemplate);
+  containerRivalInfo.appendChild(rivalTemplate);
+};
+
+
+// функция для навешивания событии(клики,нажатие клавиш)  маркерам
+var handleMarkerEvent = function (markerTag, indexCurrentRival) {
+  markerTag.addEventListener('click', function () {
+    insertContentTemplate(arrayRival, indexCurrentRival);
+    addClassActive(markers, event);
+    containerRivalInfo.style.display = 'block';
+  });
+
+  markerTag.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_CODE) {
+      containerRivalInfo.style.display = 'block';
+    }
   });
 };
 
-insertContentTemplate(arrayRival, '.dialog__panel');
+// функция для удаления активного класса
+var removeClassActive = function (markerArray) {
+  for (var i = 0; i < markerArray.length; i++) {
+    if (markerArray[i].classList.contains('pin--active')) {
+      markerArray[i].classList.remove('pin--active');
+    }
+  }
+};
+
+
+// функция для добавления активного класса маркеру
+var addClassActive = function (AllMarkers, currentMarker) {
+  removeClassActive(AllMarkers);
+  currentMarker.currentTarget.classList.add('pin--active');
+};
+
+// функция для отрисовки маркеров
+var renderMarker = function (arrayUsers, contentMarker) {
+  var fragment = document.createDocumentFragment();
+
+  arrayUsers.forEach(function (element, index) {
+    var newMarker = document.createElement('div');
+    newMarker.classList.add('pin');
+    newMarker.style = 'left: ' + element.location.x + 'px;' + ' top:' + element.location.y + 'px;';
+    newMarker.innerHTML = '<img src=' + element.author.avatar + ' class=\'rounded\' width=\'40\' height=\'40\'>';
+    newMarker.setAttribute('tabindex', 0);
+    handleMarkerEvent(newMarker, index);
+
+    fragment.appendChild(newMarker);
+  });
+
+  contentMarker.appendChild(fragment);
+};
+
+renderMarker(arrayRival, containerMarker);
+
+var markers = document.querySelectorAll('.pin');
+var dialogClose = document.querySelector('.dialog__close');
+dialogClose.setAttribute('tabindex', 0);
+
+dialogClose.addEventListener('click', function () {
+  containerRivalInfo.style.display = 'none';
+  removeClassActive(markers);
+});
+
+dialogClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_CODE) {
+    containerRivalInfo.style.display = 'none';
+  }
+});
+
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    containerRivalInfo.style.display = 'none';
+    removeClassActive(markers);
+  }
+});
+
+
