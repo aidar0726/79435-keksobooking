@@ -270,9 +270,9 @@ var insertContentTemplate = function (arrayСompetitor, сurrentRival) {
 
 // функция для навешивания событии(клики,нажатие клавиш)  маркерам
 var handleMarkerEvent = function (markerTag, indexCurrentRival) {
-  markerTag.addEventListener('click', function () {
+  markerTag.addEventListener('click', function (evt) {
     insertContentTemplate(arrayRival, indexCurrentRival);
-    addClassActive(markers, event);
+    addClassActive(markers, evt);
     containerRivalInfo.style.display = 'block';
   });
 
@@ -341,4 +341,89 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
+/* ----код для обработки правильности введенных значений формы----- */
+var notice = document.querySelector('.notice');
+var titleField = notice.querySelector('#title');
+var addressField = notice.querySelector('#address');
+var typeHouseField = notice.querySelector('#type');
+var priceField = notice.querySelector('#price');
+var amountRoomField = notice.querySelector('#room_number');
+var capacityField = notice.querySelector('#capacity');
+var timeInField = notice.querySelector('#timein');
+var timeOutField = notice.querySelector('#timeout');
 
+// установка атрибутов необходимых аттрибутов для валидации.
+titleField.setAttribute('required', true);
+titleField.setAttribute('minlength', 30);
+titleField.setAttribute('maxlength', 100);
+addressField.setAttribute('required', true);
+priceField.setAttribute('required', true);
+
+// функция для соответствия значении типа квартиры и минимальной цены
+var relateTypePrice = function () {
+  var indexValueTypeHouse = typeHouseField.options.selectedIndex;
+  var valueTypeHouse = typeHouseField.options[indexValueTypeHouse].value;
+
+  switch (valueTypeHouse) {
+    case 'bungalo': priceField.value = 0;
+      break;
+
+    case 'flat': priceField.value = 1000;
+      break;
+
+    case 'house': priceField.value = 5000;
+      break;
+
+    case 'palace': priceField.value = 10000;
+      break;
+  }
+};
+
+relateTypePrice();
+
+typeHouseField.addEventListener('change', relateTypePrice);
+
+// функция для перебора option у select и установки соответсвующего option
+var checkValueField = function (valueField, changeSelect) {
+  for (var i = 0; i < changeSelect.length; i++) {
+    var currentOption = changeSelect.options[i];
+    if (currentOption.value === valueField) {
+      currentOption.selected = true;
+    }
+    if (valueField === '100') {
+      currentOption.selected = true;
+    }
+  }
+};
+
+// функция для соответствия значении полей везда и выезда
+
+var relateTimeinTimeout = function () {
+  var indexValueTimeIn = timeInField.options.selectedIndex;
+  var valueTimeIn = timeInField.options[indexValueTimeIn].value;
+  checkValueField(valueTimeIn, timeOutField);
+};
+
+var relateTimeoutTimein = function () {
+  var indexValueTimeOut = timeOutField.options.selectedIndex;
+  var valueTimeOut = timeOutField.options[indexValueTimeOut].value;
+  checkValueField(valueTimeOut, timeInField);
+};
+
+relateTimeinTimeout();
+
+timeInField.addEventListener('change', relateTimeinTimeout);
+
+timeOutField.addEventListener('change', relateTimeoutTimein);
+
+// функция для соответствия значении типа жилья и минимальной цены
+var relateRoomCapacity = function () {
+  var indexValueRoom = amountRoomField.options.selectedIndex;
+  var valueRoom = amountRoomField.options[indexValueRoom].value;
+
+  checkValueField(valueRoom, capacityField);
+};
+
+relateRoomCapacity();
+
+amountRoomField.addEventListener('change', relateRoomCapacity);
