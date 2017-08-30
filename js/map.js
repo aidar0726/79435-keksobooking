@@ -342,6 +342,14 @@ document.addEventListener('keydown', function (evt) {
 });
 
 /* ----код для обработки правильности введенных значений формы----- */
+var BUNGALO_MIN_PRICE = 0;
+var FLAT_MIN_PRICE = 1000;
+var HOUSE_MIN_PRICE = 5000;
+var PALASE_MIN_PRICE = 10000;
+var MAX_VALUE_ROOM = 100;
+var MIN_VALUE_GUEST = 0;
+var MINLENGTH_SYMBOL_TITLE = 30;
+var MAXLENGTH_SYMBOL_TITLE = 100;
 var notice = document.querySelector('.notice');
 var titleField = notice.querySelector('#title');
 var addressField = notice.querySelector('#address');
@@ -354,8 +362,8 @@ var timeOutField = notice.querySelector('#timeout');
 
 // установка атрибутов необходимых аттрибутов для валидации.
 titleField.setAttribute('required', true);
-titleField.setAttribute('minlength', 30);
-titleField.setAttribute('maxlength', 100);
+titleField.setAttribute('minlength', MINLENGTH_SYMBOL_TITLE);
+titleField.setAttribute('maxlength', MAXLENGTH_SYMBOL_TITLE);
 addressField.setAttribute('required', true);
 priceField.setAttribute('required', true);
 
@@ -365,16 +373,16 @@ var relateTypePrice = function () {
   var valueTypeHouse = typeHouseField.options[indexValueTypeHouse].value;
 
   switch (valueTypeHouse) {
-    case 'bungalo': priceField.value = 0;
+    case 'bungalo': priceField.value = BUNGALO_MIN_PRICE;
       break;
 
-    case 'flat': priceField.value = 1000;
+    case 'flat': priceField.value = FLAT_MIN_PRICE;
       break;
 
-    case 'house': priceField.value = 5000;
+    case 'house': priceField.value = HOUSE_MIN_PRICE;
       break;
 
-    case 'palace': priceField.value = 10000;
+    case 'palace': priceField.value = PALASE_MIN_PRICE;
       break;
   }
 };
@@ -384,30 +392,24 @@ relateTypePrice();
 typeHouseField.addEventListener('change', relateTypePrice);
 
 // функция для перебора option у select и установки соответсвующего option
-var checkValueField = function (valueField, changeSelect) {
-  for (var i = 0; i < changeSelect.length; i++) {
-    var currentOption = changeSelect.options[i];
-    if (currentOption.value === valueField) {
-      currentOption.selected = true;
-    }
-    if (valueField === '100') {
-      currentOption.selected = true;
-    }
+var checkValueField = function (selectIn, selectOut) {
+  var indexValueSelect = selectIn.options.selectedIndex;
+  var valueSelect = selectIn.options[indexValueSelect].value;
+
+  selectOut.value = valueSelect;
+  if (+valueSelect === MAX_VALUE_ROOM) {
+    selectOut.value = MIN_VALUE_GUEST;
   }
 };
 
 // функция для соответствия значении полей везда и выезда
 
 var relateTimeinTimeout = function () {
-  var indexValueTimeIn = timeInField.options.selectedIndex;
-  var valueTimeIn = timeInField.options[indexValueTimeIn].value;
-  checkValueField(valueTimeIn, timeOutField);
+  checkValueField(timeInField, timeOutField);
 };
 
 var relateTimeoutTimein = function () {
-  var indexValueTimeOut = timeOutField.options.selectedIndex;
-  var valueTimeOut = timeOutField.options[indexValueTimeOut].value;
-  checkValueField(valueTimeOut, timeInField);
+  checkValueField(timeOutField, timeInField);
 };
 
 relateTimeinTimeout();
@@ -418,12 +420,11 @@ timeOutField.addEventListener('change', relateTimeoutTimein);
 
 // функция для соответствия значении типа жилья и минимальной цены
 var relateRoomCapacity = function () {
-  var indexValueRoom = amountRoomField.options.selectedIndex;
-  var valueRoom = amountRoomField.options[indexValueRoom].value;
-
-  checkValueField(valueRoom, capacityField);
+  checkValueField(amountRoomField, capacityField);
 };
 
 relateRoomCapacity();
 
 amountRoomField.addEventListener('change', relateRoomCapacity);
+
+
