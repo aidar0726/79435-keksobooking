@@ -396,10 +396,10 @@ var checkValueField = function (selectIn, selectOut) {
   var indexValueSelect = selectIn.options.selectedIndex;
   var valueSelect = selectIn.options[indexValueSelect].value;
 
-  selectOut.value = valueSelect;
-  if (+valueSelect === MAX_VALUE_ROOM) {
+  if (valueSelect === MAX_VALUE_ROOM) {
     selectOut.value = MIN_VALUE_GUEST;
   }
+  selectOut.value = valueSelect;
 };
 
 // функция для соответствия значении полей везда и выезда
