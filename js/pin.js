@@ -36,28 +36,22 @@
     currentMarker.currentTarget.classList.add('pin--active');
   };
 
-  // функция для отрисовки маркеров
-  var renderMarker = function (arrayUsers, contentMarker) {
-    var fragment = document.createDocumentFragment();
+  // функция для отрисовки маркера
+  var renderMarker = function (element) {
+    var newMarker = document.createElement('div');
+    newMarker.classList.add('pin');
+    newMarker.style = 'left: ' + element.location.x + 'px;' + ' top:' + element.location.y + 'px;';
+    newMarker.innerHTML = '<img src=' + element.author.avatar + ' class=\'rounded\' width=\'40\' height=\'40\'>';
+    newMarker.setAttribute('tabindex', 0);
 
-    arrayUsers.forEach(function (element, index) {
-      var newMarker = document.createElement('div');
-      newMarker.classList.add('pin');
-      newMarker.style = 'left: ' + element.location.x + 'px;' + ' top:' + element.location.y + 'px;';
-      newMarker.innerHTML = '<img src=' + element.author.avatar + ' class=\'rounded\' width=\'40\' height=\'40\'>';
-      newMarker.setAttribute('tabindex', 0);
-      handleMarkerEvent(newMarker, index);
-
-      fragment.appendChild(newMarker);
-    });
-
-    contentMarker.appendChild(fragment);
+    return newMarker;
   };
 
 
   window.pin = {
     removeClassActive: removeClassActive,
-    renderMarker: renderMarker
+    renderMarker: renderMarker,
+    handleMarkerEvent: handleMarkerEvent
   };
 })();
 
