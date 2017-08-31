@@ -3,7 +3,6 @@
 (function () {
   var containerRivalInfo = document.querySelector('.dialog');
   // var containerMarker = document.querySelector('.tokyo__pin-map');
-  var markers = document.querySelectorAll('.pin');
   var ENTER_CODE = 13;
   // функция для навешивания событии(клики,нажатие клавиш)  маркерам
   var handleMarkerEvent = function (markerTag, indexCurrentRival) {
@@ -37,17 +36,17 @@
   };
 
   // функция для отрисовки маркера
-  var renderMarker = function (element) {
+  var renderMarker = function (element, index) {
     var newMarker = document.createElement('div');
     newMarker.classList.add('pin');
     newMarker.style = 'left: ' + element.location.x + 'px;' + ' top:' + element.location.y + 'px;';
     newMarker.innerHTML = '<img src=' + element.author.avatar + ' class=\'rounded\' width=\'40\' height=\'40\'>';
     newMarker.setAttribute('tabindex', 0);
-
+    handleMarkerEvent(newMarker, index);
     return newMarker;
   };
 
-
+  var markers = document.querySelectorAll('.pin');
   window.pin = {
     removeClassActive: removeClassActive,
     renderMarker: renderMarker,

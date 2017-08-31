@@ -5,8 +5,7 @@
   var rivals = window.data.arrayRival;
 
   rivals.forEach(function (rival, index) {
-    var pin = window.pin.renderMarker(rival);
-    window.pin.handleMarkerEvent(pin, index);
+    var pin = window.pin.renderMarker(rival, index);
     fragment.appendChild(pin);
   });
 
