@@ -69,7 +69,7 @@
 
   dialogClose.addEventListener('click', function () {
     containerRivalInfo.style.display = 'none';
-    window.pin.removeClassActive(markers);
+    window.pin.removeClassActive();
   });
 
   dialogClose.addEventListener('keydown', function (evt) {
@@ -81,7 +81,7 @@
   document.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ESC_CODE) {
       containerRivalInfo.style.display = 'none';
-      window.pin.removeClassActive(markers);
+      window.pin.removeClassActive();
     }
   });
 
