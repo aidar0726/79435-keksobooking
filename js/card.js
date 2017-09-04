@@ -2,7 +2,6 @@
 
 (function () {
   var containerRivalInfo = document.querySelector('.dialog');
-  var markers = document.querySelectorAll('.pin');
   var ENTER_CODE = 13;
   var ESC_CODE = 27;
   var createTypePlace = function (typePlace) {
