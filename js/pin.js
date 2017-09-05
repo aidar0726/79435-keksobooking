@@ -4,34 +4,39 @@
   var containerRivalInfo = document.querySelector('.dialog');
   // var containerMarker = document.querySelector('.tokyo__pin-map');
   var ENTER_CODE = 13;
+
+  var blockCardVisible = function (indexMarker, evt) {
+    window.card.insertContentTemplate(window.data.arrayRival, indexMarker);
+    addClassActive(evt);
+    containerRivalInfo.style.display = 'block';
+  };
+
   // функция для навешивания событии(клики,нажатие клавиш)  маркерам
   var handleMarkerEvent = function (markerTag, indexCurrentRival) {
     markerTag.addEventListener('click', function (evt) {
-      window.card.insertContentTemplate(window.data.arrayRival, indexCurrentRival);
-      addClassActive(markers, evt);
-      containerRivalInfo.style.display = 'block';
+      blockCardVisible(indexCurrentRival, evt);
     });
 
     markerTag.addEventListener('keydown', function (evt) {
       if (evt.keyCode === ENTER_CODE) {
-        containerRivalInfo.style.display = 'block';
+        blockCardVisible(indexCurrentRival, evt);
       }
     });
   };
 
   // функция для удаления активного класса
-  var removeClassActive = function (markerArray) {
-    for (var i = 0; i < markerArray.length; i++) {
-      if (markerArray[i].classList.contains('pin--active')) {
-        markerArray[i].classList.remove('pin--active');
-      }
+  var removeClassActive = function () {
+
+    var pinActive = document.querySelector('.pin--active');
+    if (pinActive) {
+      pinActive.classList.remove('pin--active');
     }
   };
 
 
   // функция для добавления активного класса маркеру
-  var addClassActive = function (AllMarkers, currentMarker) {
-    removeClassActive(AllMarkers);
+  var addClassActive = function (currentMarker) {
+    removeClassActive();
     currentMarker.currentTarget.classList.add('pin--active');
   };
 
@@ -46,7 +51,6 @@
     return newMarker;
   };
 
-  var markers = document.querySelectorAll('.pin');
   window.pin = {
     removeClassActive: removeClassActive,
     renderMarker: renderMarker,

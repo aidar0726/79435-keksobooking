@@ -2,7 +2,6 @@
 
 (function () {
   var containerRivalInfo = document.querySelector('.dialog');
-  var markers = document.querySelectorAll('.pin');
   var ENTER_CODE = 13;
   var ESC_CODE = 27;
   var createTypePlace = function (typePlace) {
@@ -69,7 +68,7 @@
 
   dialogClose.addEventListener('click', function () {
     containerRivalInfo.style.display = 'none';
-    window.pin.removeClassActive(markers);
+    window.pin.removeClassActive();
   });
 
   dialogClose.addEventListener('keydown', function (evt) {
@@ -81,7 +80,7 @@
   document.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ESC_CODE) {
       containerRivalInfo.style.display = 'none';
-      window.pin.removeClassActive(markers);
+      window.pin.removeClassActive();
     }
   });
 
