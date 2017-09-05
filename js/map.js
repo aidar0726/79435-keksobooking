@@ -18,11 +18,40 @@
   var mapCityWidth = mapCity.offsetWidth;
   var mapCityHeight = mapCity.offsetHeight;
   var limitLeft = 0;
-  var limitBottom = 60;
+  var limitBottom = 40;
   var limitTop = 180;
 
   addressField.setAttribute('readonly', true);
 
+  var canPinMove = function (pinHeihgt, pinWidth, shiftPin) {
+    var result = true;
+    var differenceShiftX = pinWidth - shiftPin.x;
+    var differenceShiftY = pinHeihgt - shiftPin.y;
+
+    if (differenceShiftY < limitTop) {
+      result = false;
+    }
+
+    if (differenceShiftY > (mapCityHeight - limitBottom)) {
+      result = false;
+    }
+
+    if (differenceShiftX < limitLeft) {
+      result = false;
+    }
+
+    if (differenceShiftX > mapCityWidth) {
+      result = false;
+    }
+
+    return result;
+  };
+
+  var coordinateEntryAdreesField = function (coordinateX, coordinateY, addressBox) {
+    coordinateX = Math.round(coordinateX);
+    coordinateY = Math.round(coordinateY);
+    addressBox.value = 'x: ' + coordinateX + '  y: ' + coordinateY;
+  };
 
   pinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -45,31 +74,14 @@
         y: moveEvt.clientY
       };
 
-      var pinHeihgt = pinMain.offsetTop + pinMain.offsetHeight;
-      var pinWidth = pinMain.offsetLeft + pinMain.offsetWidth / 2;
-      pinWidth = Math.round(pinWidth);
-      pinHeihgt = Math.round(pinHeihgt);
+      var pinY = pinMain.offsetTop + pinMain.offsetHeight;
+      var pinX = pinMain.offsetLeft + pinMain.offsetWidth / 2;
 
-      if ((pinHeihgt - shift.y) < limitTop) {
-        return;
+      if (canPinMove(pinY, pinX, shift)) {
+        pinMain.style.top = ((pinMain.offsetTop) - shift.y) + 'px';
+        pinMain.style.left = ((pinMain.offsetLeft) - shift.x) + 'px';
+        coordinateEntryAdreesField(pinX, pinY, addressField);
       }
-
-      if ((pinHeihgt - shift.y) > (mapCityHeight - limitBottom)) {
-        return;
-      }
-
-      if ((pinWidth - shift.x) < limitLeft) {
-        return;
-      }
-
-      if ((pinWidth - shift.x) > mapCityWidth) {
-        return;
-      }
-
-      pinMain.style.top = ((pinMain.offsetTop) - shift.y) + 'px';
-      pinMain.style.left = ((pinMain.offsetLeft) - shift.x) + 'px';
-
-      addressField.value = 'x: ' + pinWidth + '  y: ' + pinHeihgt;
     };
 
     var onMouseUp = function (upEvt) {
