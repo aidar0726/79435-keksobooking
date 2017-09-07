@@ -2,14 +2,30 @@
 (function () {
   var containerMarker = document.querySelector('.tokyo__pin-map');
   var fragment = document.createDocumentFragment();
-  var rivals = window.data.arrayRival;
 
-  rivals.forEach(function (rival, index) {
-    var pin = window.pin.renderMarker(rival, index);
-    fragment.appendChild(pin);
-  });
+  var successHandler = function (dataAdvert) {
+    dataAdvert.forEach(function (rival, index) {
+      var pin = window.pin.renderMarker(rival, index);
+      fragment.appendChild(pin);
+    });
+    containerMarker.appendChild(fragment);
+  };
 
-  containerMarker.appendChild(fragment);
+  window.errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 1000; line-height: 60px; margin: 0 auto; text-align: center; background-color: red; height: 70px; color: white';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '20px';
+    node.textContent = errorMessage;
+    node.addEventListener('click', function (evt) {
+      evt.currentTarget.style.display = 'none';
+    });
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  window.backend.load(successHandler, window.errorHandler);
 
   /* ---  код для перетаскивания заполняемого pina по карте и нахождение его координат ---*/
   var pinMain = document.querySelector('.pin__main');

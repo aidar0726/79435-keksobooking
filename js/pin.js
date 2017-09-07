@@ -3,16 +3,16 @@
 (function () {
   var ENTER_CODE = 13;
   // функция для навешивания событии(клики,нажатие клавиш)  маркерам
-  var handleMarkerEvent = function (markerTag, indexCurrentRival) {
+  var handleMarkerEvent = function (markerTag, element) {
     markerTag.addEventListener('click', function (evt) {
       addClassActive(evt);
-      window.showCard(indexCurrentRival);
+      window.showCard(element);
     });
 
     markerTag.addEventListener('keydown', function (evt) {
       if (evt.keyCode === ENTER_CODE) {
         addClassActive(evt);
-        window.showCard(indexCurrentRival);
+        window.showCard(element);
       }
     });
   };
@@ -34,13 +34,13 @@
   };
 
   // функция для отрисовки маркера
-  var renderMarker = function (element, index) {
+  var renderMarker = function (element) {
     var newMarker = document.createElement('div');
     newMarker.classList.add('pin');
     newMarker.style = 'left: ' + element.location.x + 'px;' + ' top:' + element.location.y + 'px;';
     newMarker.innerHTML = '<img src=' + element.author.avatar + ' class=\'rounded\' width=\'40\' height=\'40\'>';
     newMarker.setAttribute('tabindex', 0);
-    handleMarkerEvent(newMarker, index);
+    handleMarkerEvent(newMarker, element);
     return newMarker;
   };
 
