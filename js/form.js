@@ -2,11 +2,7 @@
 
 (function () {
   /* ----код для обработки правильности введенных значений формы----- */
-  var BUNGALO_MIN_PRICE = 0;
-  var FLAT_MIN_PRICE = 1000;
-  var HOUSE_MIN_PRICE = 5000;
-  var PALASE_MIN_PRICE = 10000;
-  var MAX_VALUE_ROOM = '100';
+  var MAX_VALUE_ROOM = 100;
   var MIN_VALUE_GUEST = 0;
   var MINLENGTH_SYMBOL_TITLE = 30;
   var MAXLENGTH_SYMBOL_TITLE = 100;
@@ -20,6 +16,41 @@
   var timeInField = notice.querySelector('#timein');
   var timeOutField = notice.querySelector('#timeout');
 
+  var dataTimeInOut = [
+    '12:00',
+    '13:00',
+    '14:00'
+  ];
+
+  var dataLodging = [
+    'flat',
+    'house',
+    'bungalo',
+    'palace'
+  ];
+
+  var dataMinPrice = [
+    '1000',
+    '5000',
+    '0',
+    '10000'
+  ];
+
+  var dataRoomsQuantity = [
+    '100',
+    '1',
+    '2',
+    '3'
+  ];
+
+  var dataCapacity = [
+    '0',
+    '1',
+    '2',
+    '3',
+  ];
+
+
   // установка атрибутов необходимых аттрибутов для валидации.
   titleField.setAttribute('required', true);
   titleField.setAttribute('minlength', MINLENGTH_SYMBOL_TITLE);
@@ -27,65 +58,48 @@
   addressField.setAttribute('required', true);
   priceField.setAttribute('required', true);
 
-  // функция для соответствия значении типа квартиры и минимальной цены
-  var relateTypePrice = function () {
-    var indexValueTypeHouse = typeHouseField.options.selectedIndex;
-    var valueTypeHouse = typeHouseField.options[indexValueTypeHouse].value;
-
-    switch (valueTypeHouse) {
-      case 'bungalo': priceField.value = BUNGALO_MIN_PRICE;
-        break;
-
-      case 'flat': priceField.value = FLAT_MIN_PRICE;
-        break;
-
-      case 'house': priceField.value = HOUSE_MIN_PRICE;
-        break;
-
-      case 'palace': priceField.value = PALASE_MIN_PRICE;
-        break;
-    }
+  // функция коллбэк для установки значения в изменяемое поле
+  var syncValues = function (element, value) {
+    element.value = value;
   };
 
-  relateTypePrice();
-
+  var relateTypePrice = function () {
+    window.synchronizeFields(typeHouseField, priceField, dataLodging, dataMinPrice, syncValues);
+  };
   typeHouseField.addEventListener('change', relateTypePrice);
 
-  // функция для перебора option у select и установки соответсвующего option
-  var checkValueField = function (selectIn, selectOut) {
-    var indexValueSelect = selectIn.options.selectedIndex;
-    var valueSelect = selectIn.options[indexValueSelect].value;
-
-    if (valueSelect === MAX_VALUE_ROOM) {
-      selectOut.value = MIN_VALUE_GUEST;
-    } else {
-      selectOut.value = valueSelect;
-    }
-  };
-
-  // функция для соответствия значении полей везда и выезда
-
   var relateTimeinTimeout = function () {
-    checkValueField(timeInField, timeOutField);
+    window.synchronizeFields(timeInField, timeOutField, dataTimeInOut, dataTimeInOut, syncValues);
   };
 
   var relateTimeoutTimein = function () {
-    checkValueField(timeOutField, timeInField);
+    window.synchronizeFields(timeOutField, timeInField, dataTimeInOut, dataTimeInOut, syncValues);
   };
-
-  relateTimeinTimeout();
 
   timeInField.addEventListener('change', relateTimeinTimeout);
 
   timeOutField.addEventListener('change', relateTimeoutTimein);
 
-  // функция для соответствия значении типа жилья и минимальной цены
+  // функция коллбэк для соответствия значении типа квартиры и минимальной цены
+  var syncValueWithMin = function (selectOut, valueSelect) {
+    if ((valueSelect === MAX_VALUE_ROOM) || (valueSelect === MIN_VALUE_GUEST)) {
+      selectOut.value = valueSelect;
+    } else {
+      selectOut.value = valueSelect;
+    }
+  };
+
   var relateRoomCapacity = function () {
-    checkValueField(amountRoomField, capacityField);
+    window.synchronizeFields(amountRoomField, capacityField, dataRoomsQuantity, dataCapacity, syncValueWithMin);
+  };
+
+  var relateCapacity = function () {
+    window.synchronizeFields(capacityField, amountRoomField, dataCapacity, dataRoomsQuantity, syncValueWithMin);
   };
 
   relateRoomCapacity();
 
   amountRoomField.addEventListener('change', relateRoomCapacity);
+  capacityField.addEventListener('change', relateCapacity);
 })();
 
