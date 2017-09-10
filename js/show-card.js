@@ -3,8 +3,8 @@
 (function () {
   var containerRivalInfo = document.querySelector('.dialog');
 
-  window.showCard = function (indexMarker) {
-    window.card.insertContentTemplate(window.data.arrayRival, indexMarker);
+  window.showCard = function (element) {
+    window.card.insertContentTemplate(element);
     containerRivalInfo.style.display = 'block';
   };
 })();

@@ -15,6 +15,7 @@
   var capacityField = notice.querySelector('#capacity');
   var timeInField = notice.querySelector('#timein');
   var timeOutField = notice.querySelector('#timeout');
+  var form = notice.querySelector('.notice__form');
 
   var dataTimeInOut = [
     '12:00',
@@ -101,5 +102,12 @@
 
   amountRoomField.addEventListener('change', relateRoomCapacity);
   capacityField.addEventListener('change', relateCapacity);
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(form), function () {
+      form.reset();
+    }, window.errorHandler);
+    evt.preventDefault();
+  });
 })();
 

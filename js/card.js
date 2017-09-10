@@ -42,12 +42,10 @@
     boonContent.appendChild(fragmentBoon);
   };
 
-  var insertContentTemplate = function (arrayСompetitor, сurrentRival) {
+  var insertContentTemplate = function (element) {
     var containerTemplate = document.querySelector('#lodge-template').content;
     document.querySelector('.dialog__panel').remove();
     var avatar = containerRivalInfo.querySelector('img');
-
-    var element = arrayСompetitor[сurrentRival];
     var rivalTemplate = containerTemplate.cloneNode(true);
     var boonContainer = rivalTemplate.querySelector('.lodge__features');
     rivalTemplate.querySelector('.lodge__title').textContent = element.offer.title;
@@ -57,7 +55,7 @@
     rivalTemplate.querySelector('.lodge__rooms-and-guests').textContent = pasteGuestsRooms(element.offer.guests, element.offer.rooms);
     rivalTemplate.querySelector('.lodge__checkin-time').textContent = pasteCheckinCheckout(element.offer.checkin, element.offer.checkout);
     renderBoon(element.offer.features, boonContainer);
-    rivalTemplate.querySelector('.lodge__description').textContent = element.offer.price.description;
+    rivalTemplate.querySelector('.lodge__description').textContent = element.offer.description;
     avatar.src = element.author.avatar;
 
     containerRivalInfo.appendChild(rivalTemplate);
