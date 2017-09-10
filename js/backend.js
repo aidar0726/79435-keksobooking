@@ -3,14 +3,15 @@
 (function () {
   var SERVER_URL = 'https://1510.dump.academy/keksobooking';
   var timeOut = 10000;
+  var STATUS_SUCCESS = 200;
 
-  var setup = function (onSucces, onError) {
+  var setup = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        onSucces(xhr.response);
+      if (xhr.status === STATUS_SUCCESS) {
+        onSuccess(xhr.response);
       } else {
         onError(xhr.response);
       }
@@ -27,14 +28,14 @@
   };
 
   window.backend = {
-    save: function (data, onSucces, onError) {
-      var xhr = setup(onSucces, onError);
+    save: function (data, onSuccess, onError) {
+      var xhr = setup(onSuccess, onError);
 
       xhr.open('POST', SERVER_URL);
       xhr.send(data);
     },
-    load: function (onSucces, onError) {
-      var xhr = setup(onSucces, onError);
+    load: function (onSuccess, onError) {
+      var xhr = setup(onSuccess, onError);
 
       xhr.open('GET', SERVER_URL + '/data');
       xhr.send();

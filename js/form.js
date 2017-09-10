@@ -6,7 +6,6 @@
   var MIN_VALUE_GUEST = 0;
   var MINLENGTH_SYMBOL_TITLE = 30;
   var MAXLENGTH_SYMBOL_TITLE = 100;
-  var TEXT_TIME_SHOW = 2000;
   var notice = document.querySelector('.notice');
   var titleField = notice.querySelector('#title');
   var addressField = notice.querySelector('#address');
@@ -17,7 +16,6 @@
   var timeInField = notice.querySelector('#timein');
   var timeOutField = notice.querySelector('#timeout');
   var form = notice.querySelector('.notice__form');
-  var submitButton = notice.querySelector('.form__submit');
 
   var dataTimeInOut = [
     '12:00',
@@ -100,14 +98,6 @@
     window.synchronizeFields(capacityField, amountRoomField, dataCapacity, dataRoomsQuantity, syncValueWithMin);
   };
 
-  // функция для осведомления пользователя что форма отправлена.
-  var changeSubmitButtonText = function (submitElement) {
-    submitElement.textContent = 'Отправлено!';
-    setTimeout(function () {
-      submitElement.textContent = 'Опубликовать';
-    }, TEXT_TIME_SHOW);
-  };
-
   relateRoomCapacity();
 
   amountRoomField.addEventListener('change', relateRoomCapacity);
@@ -115,7 +105,6 @@
 
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), function () {
-      changeSubmitButtonText(submitButton);
       form.reset();
     }, window.errorHandler);
     evt.preventDefault();
